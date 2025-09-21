@@ -845,15 +845,3 @@ span {
     respiracionGirasol 6s ease-in-out infinite, 
     brilloIntenso 3.5s ease-in-out infinite; 
 }
-
-#text-dinamic{
-  display:inline-block;
-  white-space:nowrap;
-  overflow:hidden;
-  border-right:2px solid currentColor;   /* cursor */
-  animation: caret .8s steps(1) infinite;
-  color: white;
-}
-@keyframes caret{
-  50%{ border-color: transparent; }
-}
