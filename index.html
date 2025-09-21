@@ -59,7 +59,7 @@
       <div><span>♡</span></div>
     </div>
       <div id="frase1" class="frase-container">
-        <h1>Flores <small> </small> para ti </h1>
+  <h1><small id="typer" data-words='["Flores cyberneticas para ti 💛","doradas ✨","para alegrarte 🌼", "Churonsita"]'></small></h1>
         <h1 class="super-awesome"> <br> Toca al fallo</h1>
     </div>
 
@@ -144,6 +144,48 @@
 </div>
 
 <!-- partial -->
+ <script>
+(function(){
+  // Busca el <small id="typer"> dentro de #frase1; si no existe, sale sin romper nada
+  const el = document.querySelector('#frase1 h1 #typer') || document.querySelector('#frase1 h1 small');
+  if(!el) return;
+
+  
+  let words = [];
+  try { words = JSON.parse(el.getAttribute('data-words') || '[]'); } catch(e){}
+  if(!Array.isArray(words) || !words.length){
+    const fallback = (el.textContent || '').trim();
+    words = fallback ? [fallback] : ['Hola 💛'];
+  }
+
+  // Velocidades (ms)
+  const TYPE = 70, DEL = 45, HOLD = 900, GAP = 350;
+
+  let i = 0;      // índice de palabra
+  let j = 0;      // índice de carácter
+  let del = false;
+
+  function tick(){
+    const w = words[i];
+    el.textContent = del ? w.slice(0, --j) : w.slice(0, ++j);
+
+    let t = del ? DEL : TYPE;
+    if(!del && j === w.length){ del = true; t = HOLD; }
+    else if(del && j === 0){ del = false; i = (i + 1) % words.length; t = GAP; }
+
+    setTimeout(tick, t);
+  }
+  tick();
+
+  // API opcional para cambiar frases en caliente
+  window.setTypewriterWords = (arr) => {
+    if(Array.isArray(arr) && arr.length){
+      words = arr.slice(); i = 0; j = 0; del = false;
+    }
+  };
+})();
+</script>
+
   <script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/fscreen%401.0.1.js'></script>
   <script src="./script2.js"></script>
   <script  src="./script.js"></script>
