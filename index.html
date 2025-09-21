@@ -58,6 +58,10 @@
       <div><span>L</span></div>
       <div><span>♡</span></div>
     </div>
+			<span id="text-dinamic"
+				data-words='["Flores amarillas 💛","Fotos y fuegos 🎆","Hecho con cariño ✨"]'>
+			</span>
+
       <div id="frase1" class="frase-container">
         <h1>Flores <small> </small> para ti </h1>
         <h1 class="super-awesome"> <br> Toca al fallo</h1>
@@ -145,6 +149,59 @@
 
 <!-- partial -->
   <script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/fscreen%401.0.1.js'></script>
+	<script>
+(function(){
+  const el = document.getElementById('text-dinamic');
+  if(!el) return;
+
+  let words;
+  try {
+    words = JSON.parse(el.getAttribute('data-words') || '[]');
+  } catch(_) { words = []; }
+  if(!Array.isArray(words) || words.length === 0){
+    words = [el.textContent.trim() || 'Hola mundo']; // fallback
+  }
+
+  const typeSpeed   = 70;   // escribir
+  const deleteSpeed = 45;   // borrar
+  const holdEnd     = 900;  // pausa al terminar de escribir
+  const betweenWord = 350;  // mini pausa al cambiar de palabra
+
+  let i = 0;          // índice de palabra
+  let j = 0;          // índice de carácter
+  let deleting = false;
+
+  function tick(){
+    const word = words[i];
+    const next = deleting ? word.slice(0, --j) : word.slice(0, ++j);
+    el.textContent = next;
+
+    let delay = deleting ? deleteSpeed : typeSpeed;
+
+    if(!deleting && j === word.length){
+      deleting = true;
+      delay = holdEnd;
+    }else if(deleting && j === 0){
+      deleting = false;
+      i = (i + 1) % words.length;
+      delay = betweenWord;
+    }
+
+    setTimeout(tick, delay);
+  }
+
+  // API opcional para cambiar frases en caliente:
+  window.setTypewriterWords = (arr) => {
+    if(Array.isArray(arr) && arr.length){
+      words = arr.slice();
+      i = 0; j = 0; deleting = false;
+    }
+  };
+
+  tick();
+})();
+</script>
+
   <script src="./script2.js"></script>
   <script  src="./script.js"></script>
   <script src="./script3.js"></script>
